@@ -104,6 +104,7 @@
 					type="text"
 					class="w-full h-full absolute top-0 bg-gray-50 border-2 rounded-xl px-4 py-1 resize-none"
 					rows="1"
+					name="message"
 					placeholder="Send a message..."
 					bind:value={messageValue}
 					bind:this={chatInput}
@@ -129,6 +130,34 @@
 	</div>
 
 	<Modal show={showModal} on:close={handleModalToggle}>
-		<div class="bg-white w-96 h-96 rounded-lg"></div>
+		<div class="rounded-lg overflow-hidden">
+			<div class="bg-blue-700 relative text-white px-4 py-2 w-full font-bold">
+				<h1>User Settings</h1>
+				<button class="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center p-1 rounded-full hover:bg-blue-600 active:bg-blue-500"
+        on:click={ handleModalToggle }
+        >
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						height="24px"
+						viewBox="0 -960 960 960"
+						width="24px"
+						fill="#e8eaed"
+						><path
+							d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+						/></svg
+					>
+				</button>
+			</div>
+			<div class="px-4 py-2 bg-white">
+				<label for="username" class="text-sm font-bold text-blue-700">Username:</label>
+				<input
+					class="w-full bg-gray-100 p-3 rounded-lg"
+					type="text"
+					id="username"
+					name="username"
+					bind:value={myname}
+				/>
+			</div>
+		</div>
 	</Modal>
 </main>
