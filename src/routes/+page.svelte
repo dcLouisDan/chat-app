@@ -4,6 +4,27 @@
 	import ChatMessage from '../components/ChatMessage.svelte';
 	import Modal from '../components/Modal.svelte';
 
+	const wsURL = 'ws://localhost:8080/ws';
+	let conn;
+
+	const connect = () => {
+		conn = new WebSocket(wsURL);
+		conn.onopen = function () {
+			console.log('Connection established!');
+		};
+		conn.onmessage = function (e) {
+			const msg = JSON.parse(e.data);
+			const newMessage = {
+				username: msg.username,
+				message: msg.message
+			};
+			messages.set([...$messages, newMessage]);
+		};
+		conn.onerror = function (err) {
+			console.error('WebSocket error:', err);
+		};
+	};
+
 	let appHeight = 750;
 	let appWidth = 400;
 	let myname = 'Dan';
@@ -26,11 +47,10 @@
 	$: chatBodyHeight = appHeight - (headerHeight + inputHeight);
 
 	const addMessage = () => {
-		const newMessage = {
-			username: myname,
-			message: chatInput.value
-		};
-		messages.set([...$messages, newMessage]);
+		const message = messageValue;
+		if (message.trim() !== '') {
+			conn.send(JSON.stringify({ Username: myname, Message: message }));
+		}
 		messageValue = '';
 	};
 
@@ -57,6 +77,10 @@
 		if (autoscroll) {
 			chatBodyDiv.scrollTo(0, chatBodyDiv.scrollHeight);
 		}
+	});
+
+	onMount(() => {
+		connect();
 	});
 </script>
 
@@ -133,9 +157,10 @@
 		<div class="rounded-lg overflow-hidden">
 			<div class="bg-blue-700 relative text-white px-4 py-2 w-full font-bold">
 				<h1>User Settings</h1>
-				<button class="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center p-1 rounded-full hover:bg-blue-600 active:bg-blue-500"
-        on:click={ handleModalToggle }
-        >
+				<button
+					class="absolute top-1/2 -translate-y-1/2 right-3 flex items-center justify-center p-1 rounded-full hover:bg-blue-600 active:bg-blue-500"
+					on:click={handleModalToggle}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						height="24px"
