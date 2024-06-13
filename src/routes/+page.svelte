@@ -1,121 +1,57 @@
 <script>
+	import { messages } from '../stores/messagesStore.js';
+	import ChatMessage from '../components/ChatMessage.svelte';
+	import { beforeUpdate, afterUpdate, onMount } from 'svelte';
+
 	let appHeight = 750;
+	let appWidth = 400;
 	let myname = 'Dan';
 
 	let messageValue = '';
 	let minRows = 1;
 	let maxRows = 5;
 
-	$: minHeight = `${1 + minRows * 1.2}em`;
-	$: maxHeight = maxRows ? `${1 + maxRows * 1.2}em` : `auto`;
-
 	// Chat Messages
 	let headerHeight = 0;
 	let inputHeight = 0;
 	let chatBodyHeight = 0;
-	$: {
-		chatBodyHeight = appHeight - (headerHeight + inputHeight);
-		console.log(chatBodyHeight);
-	}
+	let chatBodyDiv;
+	let chatInput;
+	let autoscroll = true;
 
-	const messages = [
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
-		},
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
-		},
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
-		},
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
-		},
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
-		},
-		{
-			username: 'Dan',
-			message: 'Hello'
-		},
-		{
-			username: 'Louis',
-			message: 'Hi guys'
-		},
-		{
-			username: 'Chris',
-			message: 'How are you guys?'
-		},
-		{
-			username: 'Dan',
-			message: "I'm ok."
+	$: minHeight = `${1 + minRows * 1.2}em`;
+	$: maxHeight = maxRows ? `${1 + maxRows * 1.2}em` : `auto`;
+	$: chatBodyHeight = appHeight - (headerHeight + inputHeight);
+
+	const addMessage = () => {
+		const newMessage = {
+			username: myname,
+			message: chatInput.value
+		};
+		messages.set([...$messages, newMessage]);
+		messageValue = '';
+	};
+
+	beforeUpdate(() => {
+		if (chatBodyDiv) {
+			const scrollableDistance = chatBodyDiv.scrollHeight - chatBodyDiv.offsetHeight;
+			autoscroll = chatBodyDiv.scrollTop > scrollableDistance - 20;
 		}
-	];
+	});
+
+	afterUpdate(() => {
+		if (autoscroll) {
+			chatBodyDiv.scrollTo(0, chatBodyDiv.scrollHeight);
+		}
+	});
+
+	const handleKeydown = (e) => {
+		if (messageValue.trim() === '') return;
+		if (e.key !== 'Enter') return;
+    e.preventDefault()
+		console.log('Enter');
+		addMessage();
+	};
 </script>
 
 <svelte:head>
@@ -124,7 +60,7 @@
 
 <main class="bg-gray-200 flex items-center justify-center h-screen w-full">
 	<div
-		class="shadow-lg border-2 rounded-xl min-w-[400px] min-h-[{appHeight}px] bg-white overflow-hidden flex flex-col"
+		class="shadow-lg border-2 rounded-xl min-w-[{appWidth}px] min-h-[{appHeight}px] bg-white overflow-hidden flex flex-col"
 	>
 		<!-- Header -->
 		<header
@@ -136,29 +72,12 @@
 
 		<!-- Chat Body -->
 		<div
-			class="flex-1 bg-blue-50 overflow-y-scroll flex flex-col-reverse gap-1"
-			style="max-height: {chatBodyHeight}px;"
+			class="flex-1 bg-blue-50 overflow-y-scroll flex-col gap-1 scroll-smooth"
+			style="max-height: {chatBodyHeight}px;min-height: {chatBodyHeight}px; max-width: {appWidth}px"
+			bind:this={chatBodyDiv}
 		>
-			{#each messages as message}
-				{#if myname == message.username}
-					<div class="py-2 px-4 flex flex-col items-end">
-						<div class="text-sm text-gray-800 mb-1 font-bold">
-							{message.username}
-						</div>
-						<div class="bg-blue-700 text-white w-fit px-2 py-1 rounded-md">
-							{message.message}
-						</div>
-					</div>
-        {:else}
-					<div class="py-2 px-4">
-						<div class="text-sm text-gray-800 mb-1 font-bold">
-							{message.username}
-						</div>
-						<div class="bg-white w-fit px-2 py-1 rounded-md">
-							{message.message}
-						</div>
-					</div>
-				{/if}
+			{#each $messages as message}
+				<ChatMessage bind:message bind:myname />
 			{/each}
 		</div>
 
@@ -174,9 +93,14 @@
 					rows="1"
 					placeholder="Send a message..."
 					bind:value={messageValue}
+					bind:this={chatInput}
+					on:keydown={handleKeydown}
 				></textarea>
 			</div>
-			<button class="bg-blue-700 p-2 rounded-full hover:bg-blue-600 active:bg-blue-500">
+			<button
+				class="bg-blue-700 p-2 rounded-full hover:bg-blue-600 active:bg-blue-500"
+				on:click={addMessage}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
