@@ -1,11 +1,13 @@
 <script>
 	import { messages } from '../stores/messagesStore.js';
-	import ChatMessage from '../components/ChatMessage.svelte';
 	import { beforeUpdate, afterUpdate, onMount } from 'svelte';
+	import ChatMessage from '../components/ChatMessage.svelte';
+	import Modal from '../components/Modal.svelte';
 
 	let appHeight = 750;
 	let appWidth = 400;
 	let myname = 'Dan';
+	let showModal = false;
 
 	let messageValue = '';
 	let minRows = 1;
@@ -32,6 +34,18 @@
 		messageValue = '';
 	};
 
+	const handleKeydown = (e) => {
+		if (messageValue.trim() === '') return;
+		if (e.key !== 'Enter') return;
+		e.preventDefault();
+		console.log('Enter');
+		addMessage();
+	};
+
+	const handleModalToggle = () => {
+		showModal = !showModal;
+	};
+
 	beforeUpdate(() => {
 		if (chatBodyDiv) {
 			const scrollableDistance = chatBodyDiv.scrollHeight - chatBodyDiv.offsetHeight;
@@ -44,14 +58,6 @@
 			chatBodyDiv.scrollTo(0, chatBodyDiv.scrollHeight);
 		}
 	});
-
-	const handleKeydown = (e) => {
-		if (messageValue.trim() === '') return;
-		if (e.key !== 'Enter') return;
-    e.preventDefault()
-		console.log('Enter');
-		addMessage();
-	};
 </script>
 
 <svelte:head>
@@ -60,20 +66,27 @@
 
 <main class="bg-gray-200 flex items-center justify-center h-screen w-full">
 	<div
-		class="shadow-lg border-2 rounded-xl min-w-[{appWidth}px] min-h-[{appHeight}px] bg-white overflow-hidden flex flex-col"
+		class="shadow-lg border-2 rounded-xl bg-white overflow-hidden flex flex-col"
+		style="min-width: {appWidth}px; min-height: {appHeight}px"
 	>
 		<!-- Header -->
 		<header
-			class="flex items-center bg-blue-700 w-full text-white font-bold px-4 py-2"
+			class="flex justify-between items-center bg-blue-700 w-full text-white font-bold px-4 py-2"
 			bind:clientHeight={headerHeight}
 		>
 			<h1>Chat Group</h1>
+			<button
+				class="text-xs bg-white text-blue-700 py-1 px-2 rounded-sm hover hover:bg-blue-50 active:bg-blue-100"
+				on:click={handleModalToggle}
+			>
+				Settings
+			</button>
 		</header>
 
 		<!-- Chat Body -->
 		<div
-			class="flex-1 bg-blue-50 overflow-y-scroll flex-col gap-1 scroll-smooth"
-			style="max-height: {chatBodyHeight}px;min-height: {chatBodyHeight}px; max-width: {appWidth}px"
+			class="flex-1 bg-blue-50 overflow-y-scroll flex-col gap-1 scroll-smooth w-full"
+			style="max-height: {chatBodyHeight}px;min-height: {chatBodyHeight}px"
 			bind:this={chatBodyDiv}
 		>
 			{#each $messages as message}
@@ -114,4 +127,8 @@
 			</button>
 		</div>
 	</div>
+
+	<Modal show={showModal} on:close={handleModalToggle}>
+		<div class="bg-white w-96 h-96 rounded-lg"></div>
+	</Modal>
 </main>
