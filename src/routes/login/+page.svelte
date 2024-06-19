@@ -3,49 +3,8 @@
 	import PrimaryButton from '../../components/PrimaryButton.svelte';
 	import SecondaryButtonLink from '../../components/SecondaryButtonLink.svelte';
 
-  const apiURL = import.meta.env.VITE_API_URL
-  const loginURL = apiURL + "/login"
-
-	let emailError = '';
-	let passwordError = '';
-	let emailInput;
-	let passwordInput;
-
-	const handleSubmit = async () => {
-		if (emailInput == '') {
-			console.log('empty email');
-			emailError = 'Please enter your email';
-			return;
-		}
-		emailError = '';
-		if (passwordInput == '') {
-			console.log('empty password');
-			passwordError = 'Please enter your password';
-			return;
-		}
-		passwordError = '';
-
-    const response = await fetch(loginURL, {
-      method: 'POST',
-      header: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: emailInput,
-        password: passwordInput
-      })
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-      console.log(data)
-    } else {
-      emailError = "Login failed. Please check your email"
-      passwordError = "Login failed. Please check your password"
-      console.log(data)
-    }
-	};
+	export let form;
+	console.log('token: ', form);
 </script>
 
 <svelte:head>
@@ -56,19 +15,21 @@
 	<div class="pb-10">
 		<h1 class="text-5xl font-display font-bold text-center text-blue-700">Login</h1>
 	</div>
-	<form on:submit|preventDefault={handleSubmit}>
+	<form method="POST">
 		<TextInput
-			bind:value={emailInput}
 			id="email"
-			bind:errorMessage={emailError}
+			name="email"
+			value={form?.email ?? ''}
+			errorMessage={form?.emailError ?? ''}
 			label="Email"
 			type="email"
 			placeholder="Enter your email"
 		/>
 		<TextInput
-			bind:value={passwordInput}
 			id="password"
-			bind:errorMessage={passwordError}
+			name="password"
+			value={form?.password ?? ''}
+			errorMessage={form?.passwordError ?? ''}
 			label="Password"
 			type="password"
 			placeholder="Password"

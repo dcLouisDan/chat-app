@@ -4,13 +4,14 @@
 	export let placeholder;
 	export let type = 'text';
 	export let label = '';
+	export let name = '';
 	export let errorMessage = '';
 
 	const handleInput = (e) => {
 		value = e.target.value;
 	};
 
-  $: isError = errorMessage != ""
+	$: isError = errorMessage != '';
 	$: height = label != '' ? 'h-15' : 'h-11';
 	$: borderClass = isError ? 'border-2 border-red-400' : 'border-2 border-gray-300';
 </script>
@@ -22,6 +23,8 @@
 	<input
 		{id}
 		{type}
+		{name}
+    {value}
 		class="w-full bg-gray-50 box-border px-5 py-2 rounded-md text-gray-700 {borderClass}"
 		{placeholder}
 		on:input={handleInput}
