@@ -1,7 +1,7 @@
 <script>
-	import TextInput from '../../components/TextInput.svelte';
-	import PrimaryButton from '../../components/PrimaryButton.svelte';
-	import SecondaryButtonLink from '../../components/SecondaryButtonLink.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import SecondaryButtonLink from '$lib/components/SecondaryButtonLink.svelte';
 </script>
 
 <svelte:head>

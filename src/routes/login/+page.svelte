@@ -1,17 +1,16 @@
 <script>
-	import TextInput from '../../components/TextInput.svelte';
-	import PrimaryButton from '../../components/PrimaryButton.svelte';
-	import SecondaryButtonLink from '../../components/SecondaryButtonLink.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import SecondaryButtonLink from '$lib/components/SecondaryButtonLink.svelte';
 
 	export let form;
-	console.log('token: ', form);
 </script>
 
 <svelte:head>
 	<title>Login</title>
 </svelte:head>
 
-<div class="bg-white h-full w-full sm:max-w-md px-8 flex flex-col justify-center">
+<div class="bg-white h-fit w-96 py-20 rounded-xl sm:max-w-md px-8 flex flex-col justify-center">
 	<div class="pb-10">
 		<h1 class="text-5xl font-display font-bold text-center text-blue-700">Login</h1>
 	</div>
