@@ -19,7 +19,6 @@ export async function load({ cookies, url }) {
     });
 
     const userData = await response.json()
-    console.log(userData)
     return userData
   };
 

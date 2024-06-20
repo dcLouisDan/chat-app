@@ -2,29 +2,22 @@
 	import TextInput from '$lib/components/TextInput.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import SecondaryButtonLink from '$lib/components/SecondaryButtonLink.svelte';
+	import { checkMissingValues } from '$lib/utils/utils';
+  
+  export let form;
 
-	let firstName = '';
-	let lastName = '';
-	let email = '';
-	let password = '';
+	let firstName = form?.firstName ?? '';
+	let lastName = form?.lastName ?? '';
+	let email = form?.email ?? '';
+	let password = form?.password ??'';
 	let repeatPassword = '';
 	let repeatPasswordError = '';
 	let isSubmitDisabled = true;
 
 	$: repeatPasswordError = password == repeatPassword ? '' : 'Passwords do not match';
-	$: isSubmitDisabled = checkMissingValues([firstName, lastName, email, password, repeatPassword]);
-
-	const checkMissingValues = (fieldsArray) => {
-		if (!Array.isArray(fieldsArray)) return true;
-
-		for (let i = 0; i < fieldsArray.length; i++) {
-			if (fieldsArray[i] === '') return true;
-		}
-
-		if (repeatPasswordError != '') return true;
-
-		return false;
-	};
+	$: isSubmitDisabled =
+		checkMissingValues([firstName, lastName, email, password, repeatPassword]) ||
+		repeatPasswordError != '';
 </script>
 
 <svelte:head>
