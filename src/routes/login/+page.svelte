@@ -34,7 +34,7 @@
 			placeholder="Password"
 		/>
 		<div class="flex flex-col gap-1 mt-5">
-			<PrimaryButton type="submit">Login</PrimaryButton>
+			<PrimaryButton isDisabled={false} type="submit">Login</PrimaryButton>
 			<SecondaryButtonLink href="/register">Register</SecondaryButtonLink>
 		</div>
 	</form>
