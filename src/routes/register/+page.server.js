@@ -22,7 +22,7 @@ export const actions = {
     }
     const response = await fetch(registerURL, {
       method: 'POST',
-      header: {
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({

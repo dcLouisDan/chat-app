@@ -6,6 +6,11 @@ export async function load({ cookies, url }) {
   if (!token && url.pathname !== '/login' && url.pathname !== '/register') {
     throw redirect(302, '/login');
   }
+
+  if (url.pathname == '/login' || url.pathname == '/register') {
+    console.log("Auth Path")
+    return
+  }
   const apiURL = import.meta.env.VITE_API_URL;
   const profileURL = apiURL + '/profile';
 

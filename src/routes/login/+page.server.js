@@ -25,7 +25,7 @@ export const actions = {
 
 		const response = await fetch(loginURL, {
 			method: 'POST',
-			header: {
+			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -42,6 +42,7 @@ export const actions = {
           error: "No token received"
         })
       }
+      console.log(data)
       cookies.set('token', data.token, {path: '/'})
 
 	    throw redirect(301, "/")
