@@ -42,7 +42,6 @@ export const actions = {
           error: "No token received"
         })
       }
-      console.log(data)
       cookies.set('token', data.token, {path: '/'})
 
 	    throw redirect(301, "/")

@@ -1,6 +1,6 @@
 <script>
 	export let type = 'button';
-	export let isDisabled = true;
+	export let isDisabled = false;
 	$: disabled = isDisabled ? 'disabled' : '';
 </script>
 
