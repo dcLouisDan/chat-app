@@ -27,6 +27,7 @@ export async function load({ cookies, url }) {
 	};
 
 	return {
-		auth: await fetchProfile()
+		auth: await fetchProfile(),
+    apiURL
 	};
 }
