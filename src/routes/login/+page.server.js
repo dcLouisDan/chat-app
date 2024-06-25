@@ -26,7 +26,8 @@ export const actions = {
 		const response = await fetch(loginURL, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
 			},
 			body: JSON.stringify({
 				email: email,

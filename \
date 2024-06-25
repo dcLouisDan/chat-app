@@ -15,7 +15,6 @@ export const actions = {
   },
   update: async ({ cookies, request }) => {
     const token = cookies.get('token');
-    const updateUrl = apiURL + '/profile/update'
 
     if (!token) {
       return fail(400, {
@@ -27,62 +26,22 @@ export const actions = {
     const firstName = formData.get('editFirstName');
     const lastName = formData.get('editLastName');
     const email = formData.get('editEmail');
-    console.log('firstname: ', firstName);
+    console.log("firstname: ", firstName)
 
-    if (firstName == '') {
+    if (firstName == "") {
       return fail(400, {
-        editFirstNameError: 'Please enter your first name',
-        isAccountInfoEditing: true,
-        firstName,
-        lastName,
-        email
-      });
-    }
-    if (lastName == '') {
-      return fail(400, {
-        editLastNameError: 'Please enter your last name',
-        isAccountInfoEditing: true,
-        firstName,
-        lastName,
-        email
-      });
-    }
-    if (email == '') {
-      return fail(400, {
-        editEmailError: 'Please enter your email',
-        isAccountInfoEditing: true,
-        firstName,
-        lastName,
-        email
-      });
-    }
-
-    const response = await fetch(updateUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        email: email
+        editFirstNameError: "Please enter your first name"
       })
-    })
-
-    const data = await response.json()
-
-    if(response.ok) {
-      return {
-        firstName,
-        lastName, 
-        email,
-        success: true
-      }
-    } else {
-      return {
-        error: data.error
-      }
+    }
+    if (lastName == "") {
+      return fail(400, {
+        editLastNameError: "Please enter your last name"
+      })
+    }
+    if (email == "") {
+      return fail(400, {
+        editEmailError: "Please enter your email"
+      })
     }
   },
   profilePictureUpdate: async ({ cookies, request }) => {
